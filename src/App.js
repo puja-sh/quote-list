@@ -12,11 +12,11 @@ function App() {
         <div className='App'>
             <AuthProvider>
                 <BrowserRouter>
-                    <Layout />
+                    <Layout/>
                     <Routes>
-                        <Route path="/" element={ <Home/> }/>
-                        <Route path="/home" element={ <Home/> }/>
                         <Route path="/login" element={ <Login/> }/>
+                        <Route path="/" element={ <PrivateRoute element={ <Home/> }/> }/>
+                        <Route path="/home" element={ <PrivateRoute element={ <Home/> }/> }/>
                         <Route path="/create" element={ <PrivateRoute element={ <Create/> }/> }/>
                     </Routes>
                 </BrowserRouter>
@@ -33,7 +33,7 @@ const Layout = () => {
         return null;
     }
 
-    return <Navbar />;
+    return <Navbar/>;
 };
 
 export default App;
