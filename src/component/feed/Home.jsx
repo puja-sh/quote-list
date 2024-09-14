@@ -91,16 +91,6 @@ const Home = () => {
         navigate('/create');
     };
 
-    const handleLogout = () => {
-        setQuotes([]);
-        setPage(0);
-        setHasMore(true);
-        setError(null);
-
-        logout();
-        navigate('/login');
-    };
-
     if (loading && quotes.length === 0) {
         return <div>Loading...</div>;
     }
@@ -111,9 +101,6 @@ const Home = () => {
 
     return (
         <div className="feed-container">
-            <button className="logout-btn" onClick={ handleLogout }>
-                Logout
-            </button>
             <button className="create-new-btn" onClick={ handleCreateQuote }>
                 Add quote
             </button>
