@@ -33,7 +33,7 @@ input:focus, input:active {
 }
 
 
-button {
+login-btn {
     outline: none;
     background: transparent;
     border: 1px solid white;

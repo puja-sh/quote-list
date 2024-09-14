@@ -1,4 +1,6 @@
-
+.feed-container {
+    position: relative;
+}
 
 
 ul {
@@ -57,4 +59,21 @@ img {
 
 .username-text, .date-text {
     font-style: italic;
+}
+
+button.create-new-btn {
+    position: fixed;
+    background: #5C4033;
+    padding: 10px;
+    width: 64px;
+    right: 0;
+    top: 50%;
+    white-space: pre-wrap;
+}
+
+button.create-new-btn:hover {
+    white-space: unset;
+    transform: scale(1.5);
+    right: 2%;
+    background: white;
 }

@@ -1,19 +1,12 @@
 import { Navigate, Route } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export const PrivateRoute = ({ component: Component, ...rest }) => {
+export const PrivateRoute = ({ element: Element }) => {
     const { isAuthenticated } = useAuth();
 
-    return (
-        <Route
-            {...rest}
-            render={props =>
-                isAuthenticated ? (
-                    <Component {...props} />
-                ) : (
-                    <Navigate to="/login" />
-                )
-            }
-        />
-    );
+    return isAuthenticated ? (
+        Element
+    ) : (
+        <Navigate to="/login"/>
+    )
 };

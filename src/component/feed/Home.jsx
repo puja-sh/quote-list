@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import './home.css'
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [quotes, setQuotes] = useState([]);
@@ -9,6 +10,7 @@ const Home = () => {
     const [page, setPage] = useState(0);  // Track the current page
     const [hasMore, setHasMore] = useState(true);  // Determine if more quotes are available
     const { token } = useAuth();
+    const navigate =  useNavigate()
 
     const fetchQuotes = useCallback(async () => {
         if (!hasMore || !token) return;
@@ -29,7 +31,7 @@ const Home = () => {
 
             const data = await response.json();
             const finalData = data.data
-            console.log("token check", data.data)
+
             if (finalData.length > 0) {
                 setQuotes(prevQuotes => [...prevQuotes, ...finalData]);
                 setPage(prevPage => prevPage + 1);  // Move to the next page
@@ -47,26 +49,30 @@ const Home = () => {
         fetchQuotes();
     }, [fetchQuotes]);
 
-    useEffect(() => {
-        fetchQuotes();
-    }, [])
+    // useEffect(() => {
+    //     fetchQuotes();
+    // }, [])
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-                fetchQuotes();
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [fetchQuotes]);
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+    //             fetchQuotes();
+    //         }
+    //     };
+    //
+    //     window.addEventListener('scroll', handleScroll);
+    //     return () => {
+    //         window.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, [fetchQuotes]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString(); // Adjust format as needed
+    };
+
+    const handleCreateQuote = () => {
+        navigate('/create')
     };
 
     if (loading && quotes.length === 0) {
@@ -81,6 +87,9 @@ const Home = () => {
     return (
         <div className="feed-container">
             Welcome!
+            <button className="create-new-btn" onClick={handleCreateQuote}>
+                Add quote
+            </button>
             <ul>
                 { quotes.map((quote, index) => {
                     const { text, mediaUrl, createdAt, username } = quote;
@@ -105,6 +114,8 @@ const Home = () => {
             </ul>
             { loading && <div>Loading more...</div> }
             { !hasMore && <div>No more quotes available</div> }
+
+
         </div>
     );
 };

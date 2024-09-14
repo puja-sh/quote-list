@@ -34,7 +34,7 @@ const Login = () => {
                 />
             </div>
 
-            <button onClick={ onLoginHandler }> Login</button>
+            <button onClick={ onLoginHandler } className='login-btn'> Login</button>
         </div>
     );
 };

@@ -1,0 +1,102 @@
+.upload-image {
+    height: 200px;
+    width: 200px;
+    object-fit: contain;
+    border-radius: unset;
+}
+
+textarea {
+    width: 80% !important;
+    height: 200px;
+    resize: none;
+    font-size: 18px;
+    padding: 10px;
+    outline: none;
+    border: 1px dotted #e0c7b8;
+    border-radius: 5px;
+    text-align: center;
+}
+
+
+.file-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    padding: 2px;
+    background-color: #007bff;
+    color: white;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.file-upload-label input[type="file"] {
+    display: none;
+}
+
+.file-upload-label span {
+    font-size: 16px;
+}
+
+.create-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.create-new-quote-container .clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    width: 70px;
+    border: 1px solid gold;
+    color: #000e4e;
+    background: gold;
+    border-radius: 300px;
+    font-size: 18px;
+}
+
+.create-new-quote-container .clear-btn:disabled {
+    background: #dcdcdc;
+    color: #000e4e;
+    border: unset;
+}
+
+.image-preview {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.image-preview img {
+    height: 200px;
+    width: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.create-new-quote-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    gap: 20px;
+}
+
+.create-new-quote-container .submit-form {
+    background: darkolivegreen;
+    outline: none;
+    border: none;
+    padding: 20px 80px;
+    border-radius: 50px;
+    color: white;
+    font-size: 18px;
+}
