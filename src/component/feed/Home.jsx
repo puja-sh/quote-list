@@ -1,23 +1,39 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from "../../context/AuthContext";
-import './home.css'
+import './home.css';
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [quotes, setQuotes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(0);  // Track the current page
-    const [hasMore, setHasMore] = useState(true);  // Determine if more quotes are available
-    const { token } = useAuth();
-    const navigate =  useNavigate()
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const { token, logout } = useAuth();
+    const navigate = useNavigate();
 
-    const fetchQuotes = useCallback(async () => {
-        if (!hasMore || !token) return;
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+        } else {
+            setQuotes([]);
+            setPage(0);
+            setHasMore(true);
+            setError(null);
+            fetchQuotes(true);
+        }
+    }, [token, navigate]);
 
-        setLoading(true);
+    const fetchQuotes = useCallback(async (isInitial = false) => {
+        if (!hasMore || (loading && !isInitial)) return;
+
+        if (isInitial) {
+            setLoading(true);
+        }
+
         try {
-            const response = await fetch(`https://assignment.stage.crafto.app/getQuotes?limit=5&offset=${ page * 5 }`, {
+            const response = await fetch(`https://assignment.stage.crafto.app/getQuotes?limit=5&offset=${ page }`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `${ token }`,
@@ -30,49 +46,59 @@ const Home = () => {
             }
 
             const data = await response.json();
-            const finalData = data.data
+            const finalData = data.data;
 
             if (finalData.length > 0) {
                 setQuotes(prevQuotes => [...prevQuotes, ...finalData]);
-                setPage(prevPage => prevPage + 1);  // Move to the next page
+                setPage(prevPage => prevPage + 1);
             } else {
-                setHasMore(false);  // No more quotes available
+                setHasMore(false);
             }
         } catch (error) {
             setError(error.message);
         } finally {
             setLoading(false);
+            setLoadingMore(false);
         }
-    }, [page, hasMore, token]);
+    }, [page, hasMore, token, loading]);
+
 
     useEffect(() => {
-        fetchQuotes();
-    }, [fetchQuotes]);
+        const handleScroll = () => {
+            const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+            const totalHeight = document.documentElement.offsetHeight;
 
-    // useEffect(() => {
-    //     fetchQuotes();
-    // }, [])
+            if (scrollPosition >= totalHeight - 100 && !loadingMore && hasMore) {
+                setLoadingMore(true);
+                setTimeout(() => {
+                    fetchQuotes();
+                }, 2000);
+            }
+        };
 
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //         if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
-    //             fetchQuotes();
-    //         }
-    //     };
-    //
-    //     window.addEventListener('scroll', handleScroll);
-    //     return () => {
-    //         window.removeEventListener('scroll', handleScroll);
-    //     };
-    // }, [fetchQuotes]);
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [fetchQuotes, loadingMore, hasMore]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString(); // Adjust format as needed
+        return date.toLocaleDateString();
     };
 
     const handleCreateQuote = () => {
-        navigate('/create')
+        navigate('/create');
+    };
+
+    const handleLogout = () => {
+        setQuotes([]);
+        setPage(0);
+        setHasMore(true);
+        setError(null);
+
+        logout();
+        navigate('/login');
     };
 
     if (loading && quotes.length === 0) {
@@ -83,11 +109,12 @@ const Home = () => {
         return <div>Error: { error }</div>;
     }
 
-
     return (
         <div className="feed-container">
-            Welcome!
-            <button className="create-new-btn" onClick={handleCreateQuote}>
+            <button className="logout-btn" onClick={ handleLogout }>
+                Logout
+            </button>
+            <button className="create-new-btn" onClick={ handleCreateQuote }>
                 Add quote
             </button>
             <ul>
@@ -97,7 +124,6 @@ const Home = () => {
                     return (
                         <li key={ index } className='quote-li'>
                             <p className='quote-text'>{ text }</p>
-
                             <div className="quote-content">
                                 <div className='user-details-container'>
                                     <img src={ mediaUrl } alt={ text } className="quote-image"/>
@@ -106,16 +132,13 @@ const Home = () => {
                                 <div>
                                     <p className='date-text'>{ formatDate(createdAt) }</p>
                                 </div>
-
                             </div>
                         </li>
-                    )
+                    );
                 }) }
             </ul>
-            { loading && <div>Loading more...</div> }
+            { loadingMore && <div className='loading-more-text'>Loading more...</div> }
             { !hasMore && <div>No more quotes available</div> }
-
-
         </div>
     );
 };

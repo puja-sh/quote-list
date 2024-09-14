@@ -2,12 +2,6 @@
     position: relative;
 }
 
-
-ul {
-
-}
-
-
 li {
     height: 150px;
     text-transform: capitalize;
@@ -66,9 +60,14 @@ button.create-new-btn {
     background: #5C4033;
     padding: 10px;
     width: 64px;
+    height: 64px;
     right: 0;
     top: 50%;
     white-space: pre-wrap;
+    border-radius: 100%;
+    border: none;
+    transition: all 0.5s ease-in-out;
+    color: white;
 }
 
 button.create-new-btn:hover {
@@ -76,4 +75,8 @@ button.create-new-btn:hover {
     transform: scale(1.5);
     right: 2%;
     background: white;
+}
+
+.loading-more-text {
+    font-size: 32px;
 }

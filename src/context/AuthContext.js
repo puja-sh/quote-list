@@ -6,16 +6,15 @@ const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [token, setToken] = useState(null);
 
-    // Check if the token exists in localStorage on component mount
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
             setToken(storedToken);
-            setIsAuthenticated(true);  // Assume user is authenticated if token exists
+            setIsAuthenticated(true);
         }
     }, []);
 
-    // Login function to get token and store it
+
     const login = async (username, otp) => {
         try {
             const response = await fetch('https://assignment.stage.crafto.app/login', {
@@ -39,24 +38,23 @@ const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('token');
+        const check = localStorage.getItem("token")
         setToken(null);
         setIsAuthenticated(false);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, token }}>
-            {children}
+        <AuthContext.Provider value={ { isAuthenticated, login, logout, token } }>
+            { children }
         </AuthContext.Provider>
     );
 };
 
 const useAuth = () => {
     const context = useContext(AuthContext);
-
     if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
-
     return context;
 };
 
